@@ -1,7 +1,8 @@
 # Display Bounding Box and Label
 
+import cv2
 
-def drawBoxAndLabel(frame, imW, imH, boxes, classes, scores):
+def drawBoxAndLabel(frame, labels, imW, imH, boxes, classes, scores, i):
     # Get bounding box coordinates and draw box
     # Interpreter can return coordinates that are outside of image dimensions, need to force them
     # to be within image using using max() and min()

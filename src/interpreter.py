@@ -2,6 +2,7 @@
 
 # Import library
 import os
+import argparse
 from threading import Thread
 import importlib.util
 
@@ -25,7 +26,7 @@ def setupInterpreter():
     
     MODEL_NAME = args.modeldir
     GRAPH_NAME = args.graph
-    LABEL_NAME = args.labels
+    LABELMAP_NAME = args.labels
     min_conf_threshold = float(args.threshold) #set as float
     resW , resH = args.resolution.split('x')
     imW , imH = int(resW), int(resH) #set as integer
@@ -69,7 +70,7 @@ def setupInterpreter():
     
     # COCO starter model from '???'
     # remove it
-    if labels[0] = '???':
+    if labels[0] == '???':
         del(labels[0])
     
     # Load TensorFlow Lite model

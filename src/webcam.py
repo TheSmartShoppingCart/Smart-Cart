@@ -23,14 +23,14 @@ import time
 
 
 # external written files
-import videostream
-import interpreter
+import videostream as vs
+import interpreter 
 import framerate
 import drawboundingbox 
 
 # Global Constant
-global inputMean = 127.5
-global inputStd = 127.5
+inputMean = 127.5
+inputStd = 127.5
 
 def webcam():
     # Set up Interpreter 
@@ -67,7 +67,7 @@ def webcam():
     frequency = framerate.init_FrameRate()
     
     # Initialize video stream
-    videoStream = VideoStream(resolution=(imH, imW), framerate=30).start()
+    videoStream = vs.VideoStream(resolution=(imH, imW), framerate=30).start()
     time.sleep(1) # delay for 1 sec
     
     while (True):
@@ -102,10 +102,10 @@ def webcam():
             if((scores[i] > min_conf_threshold) and (scores[i] <= 1.0)):
                 
                 # Get bounding box coordinates and draw box
-                drawboundingbox.drawBoxAndLabel(frame, labels, imW, imH, boxes, classes, scores)
+                drawboundingbox.drawBoxAndLabel(frame, labels, imW, imH, boxes, classes, scores, i)
         
         # Draw framerate in the corner of frame
-        cv2.putText(frame, 'FPS: {0: .2f)'.format(frameRateCal), (30, 50), cv2.FONT_HERSHEY_SIMPLEX, 1, (255,255,0), 2, cv2.LINE_AA) 
+        cv2.putText(frame, 'FPS: {0: .2f}'.format(frameRateCal), (30, 50), cv2.FONT_HERSHEY_SIMPLEX, 1, (255,255,0), 2, cv2.LINE_AA) 
         
         # Show the webcam
         cv2.imshow('WebCam', frame) 
@@ -120,7 +120,9 @@ def webcam():
 
     # Clean up
     cv2.destroyAllWindows()
-    videoStream.stop() 
+    videoStream.stop()
+    
+webcam()
         
     
     

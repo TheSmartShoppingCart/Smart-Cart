@@ -10,7 +10,7 @@ def init_FrameRate():
 
 def calculateFrameRate(t_start, t_end, frequency):
     timePeriod = (t_end - t_start)/frequency
-    frameRate = 1/frequency
+    frameRate = 1/timePeriod
     
     return frameRate
     
