@@ -1,5 +1,6 @@
 import sys
 from PyQt6.QtWidgets import QApplication, QMainWindow, QTableWidget, QTableWidgetItem, QVBoxLayout, QWidget
+from PyQt6 import QtWidgets
 
 class CustomerInfoWindow(QMainWindow):
     def __init__(self):
@@ -35,7 +36,7 @@ class CustomerInfoWindow(QMainWindow):
 
         # Update geometry to accommodate the headers
         self.tableWidget.horizontalHeader().setStretchLastSection(True)
-        self.tableWidget.horizontalHeader().setSectionResizeMode(QTableWidget.ResizeMode.Stretch)
+        self.tableWidget.horizontalHeader().setSectionResizeMode(QtWidgets.QHeaderView.Stretch)
 
 if __name__ == "__main__":
     app = QApplication(sys.argv)
