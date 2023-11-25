@@ -160,6 +160,7 @@ def webcam():
                 # Add Specific Class condition here: if 'orange', 'apple' then append the item coord in the list 
                 itemList.append(coord)
 #                 print(objectType)
+                itemDetected = itemName
 
         #1. Keep track of the item in frame
         bbox_id = tracker.update(itemList) 
