@@ -27,7 +27,8 @@ import videostream as vs
 import interpreter 
 import framerate
 import utilities
-from tracker import * 
+from tracker import *
+import audio
 
 # Global Constant
 inputMean = 127.5
@@ -67,12 +68,16 @@ ObjectOut = {}
 counterOut = []
 
 # Cart Item
-myCartItem = {} 
+myCartItem = {}
 
-# set object Tracker
-tracker = Tracker() 
+# Item Name
+
+
 
 def webcam():
+    
+    # set object Tracker
+    tracker = Tracker() 
     
     # Dictionary ObjectInBasket is used to save the Object in the basket
     ObjectIn = {}
@@ -118,7 +123,8 @@ def webcam():
     # Initialize video stream
     videoStream = vs.VideoStream(resolution=(imW, imH), framerate=30).start()
     time.sleep(1) # delay for 1 sec
-    
+    itemDetected = ''
+    itemName = ''
     while (True):
         
         # clear the dictionary
@@ -159,14 +165,17 @@ def webcam():
                 coord, itemName  = utilities.drawBoxAndLabel(frame, labels, imW, imH, boxes, classes, scores, i)
                 # Add Specific Class condition here: if 'orange', 'apple' then append the item coord in the list 
                 itemList.append(coord)
-#                 print(objectType)
-                itemDetected = itemName
+#                 if (i == len(scores) -1):
+                itemDetected = itemName  
 
         #1. Keep track of the item in frame
-        bbox_id = tracker.update(itemList) 
-        
+        bbox_id = tracker.update(itemList)
+            
+#         if (len(itemDetected) != 0):
+#             print(f'for debugging: ' + itemDetected[0])
         #2. Call Tracker class to assign the ID
         for bbox in bbox_id:
+#             print(f'In BBOX: ' + itemDetected[0])
             #3. Add if-condition 
             x3, y3, x4, y4, id = bbox
             cx, cy = utilities.createCenterPoint(x3,y3,x4,y4) #center of the box x and y coordinate
@@ -187,10 +196,14 @@ def webcam():
                     # this condition is to avoid repetitive counting
                     if counterIn.count(id) == 0:
                         counterIn.append(id)
-                        # Send to the BackEnd to Evaluate 
+                        # Send to the BackEnd to Evaluate
+                        print(f'ItemName from OI: ' + itemName) 
+                        time.sleep(0.25)
                         myCartItem[itemName] = 1
-                        print(myCartItem) 
-           
+                        print(myCartItem)
+                        audio.itemInCart()
+                            
+                       
             # GO UP
             # Object pass the line and object is about to cross the line (LINE 2)
             if (LINE2_y < (cy + OFFSET)) and (LINE2_y > (cy - OFFSET)):
@@ -204,12 +217,17 @@ def webcam():
                     cv2.circle(frame, (cx,cy), 4, RED, CIRCLE_THICKNESS)
                     cv2.putText(frame, str(id), (cx, cy), FONT, FONT_SCALE, YELLOW, TEXT_THICKNESS)
                     # this condition is to avoid repetitive counting
+    #                     print(f'Inside if ObjectOut: ' + itemDetected[0])
                     if counterOut.count(id) == 0:
                         # append the id
                         counterOut.append(id)
                         # Send to the BackEnd to Evaluate
+                        print(f'ItemName from OO: ' + itemName)
+                        time.sleep(0.25)
                         myCartItem[itemName] = -1
                         print(myCartItem)
+                        audio.itemOutCart()
+                           
             
         # Write framerate in the corner of frame
         cv2.putText(frame, 'FPS: {0:.2f}'.format(frameRateCal), (30, 50), FONT, 1, CYAN, 2, cv2.LINE_AA) 
