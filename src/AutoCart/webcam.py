@@ -71,7 +71,7 @@ counterOut = []
 myCartItem = {}
 
 # Item Name
-
+myCurrentItem = ''
 
 
 def webcam():
@@ -166,7 +166,10 @@ def webcam():
                 # Add Specific Class condition here: if 'orange', 'apple' then append the item coord in the list 
                 itemList.append(coord)
 #                 if (i == len(scores) -1):
-                itemDetected = itemName  
+                if itemName != '':
+                    myCurrentItem = itemName
+#                 print(f'Coordinate: ' + str(coord))
+                
 
         #1. Keep track of the item in frame
         bbox_id = tracker.update(itemList)
@@ -176,7 +179,8 @@ def webcam():
         #2. Call Tracker class to assign the ID
         for bbox in bbox_id:
 #             print(f'In BBOX: ' + itemDetected[0])
-            #3. Add if-condition 
+            #3. Add if-condition
+#             print(f'itemName: ' + itemName)
             x3, y3, x4, y4, id = bbox
             cx, cy = utilities.createCenterPoint(x3,y3,x4,y4) #center of the box x and y coordinate
 
@@ -194,14 +198,17 @@ def webcam():
                     cv2.circle(frame, (cx, cy), 4, RED, CIRCLE_THICKNESS)
                     cv2.putText(frame, str(id), (cx, cy), FONT, FONT_SCALE, YELLOW, TEXT_THICKNESS) # put ID text on the object
                     # this condition is to avoid repetitive counting
+                    
                     if counterIn.count(id) == 0:
                         counterIn.append(id)
                         # Send to the BackEnd to Evaluate
-                        print(f'ItemName from OI: ' + itemName) 
-                        time.sleep(0.25)
-                        myCartItem[itemName] = 1
+#                         print(f'ItemName from OI: ' + itemDetected) 
+                        time.sleep(0.1) 
+                        myCartItem[myCurrentItem] = 1
+                        print(f'myCurrentItem: ' + myCurrentItem)
                         print(myCartItem)
-                        audio.itemInCart()
+                        myCurrentItem = ''
+#                         audio.itemInCart()
                             
                        
             # GO UP
@@ -222,11 +229,14 @@ def webcam():
                         # append the id
                         counterOut.append(id)
                         # Send to the BackEnd to Evaluate
-                        print(f'ItemName from OO: ' + itemName)
-                        time.sleep(0.25)
-                        myCartItem[itemName] = -1
+#                         print(f'ItemName from OO: ' + itemDetected)
+                        time.sleep(0.1)
+                        myCartItem[myCurrentItem] = -1
+                        
+                        print(f'myCurrentItem: ' + myCurrentItem)
                         print(myCartItem)
-                        audio.itemOutCart()
+                        myCurrentItem = ''
+    #                             audio.itemOutCart()
                            
             
         # Write framerate in the corner of frame
